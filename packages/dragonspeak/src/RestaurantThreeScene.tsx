@@ -291,34 +291,34 @@ function RestaurantThreeScene({ active }: Props) {
     root.add(dragon);
 
     const dragonBody = new MeshStandardMaterial({
-      color: "#3a8c5c",
-      emissive: "#0f2f1a",
-      emissiveIntensity: 0.15,
-      roughness: 0.45,
+      color: "#b33131",
+      emissive: "#4a1010",
+      emissiveIntensity: 0.2,
+      roughness: 0.4,
     });
     const dragonBelly = new MeshStandardMaterial({
-      color: "#a8d8a0",
-      roughness: 0.5,
+      color: "#e8c0a0",
+      roughness: 0.45,
     });
     const dragonEye = new MeshStandardMaterial({
       color: "#f4c259",
       emissive: "#ff8c00",
-      emissiveIntensity: 0.6,
-      roughness: 0.15,
+      emissiveIntensity: 0.7,
+      roughness: 0.12,
     });
     const dragonHorn = new MeshStandardMaterial({
-      color: "#e8d5a0",
-      roughness: 0.3,
+      color: "#2a1a10",
+      roughness: 0.25,
     });
     const dragonSpike = new MeshStandardMaterial({
-      color: "#2a6640",
-      roughness: 0.35,
+      color: "#6b1a1a",
+      roughness: 0.3,
     });
     const dragonWing = new MeshStandardMaterial({
-      color: "#3a7a50",
-      emissive: "#0f2f1a",
-      emissiveIntensity: 0.08,
-      roughness: 0.4,
+      color: "#8b2020",
+      emissive: "#3a0a0a",
+      emissiveIntensity: 0.1,
+      roughness: 0.35,
       side: DoubleSide,
     });
 
@@ -359,8 +359,8 @@ function RestaurantThreeScene({ active }: Props) {
     addMesh(head, new ConeGeometry(0.04, 0.14, 12, 8), dragonHorn, [0.04, 0.12, -0.08]);
 
     // Nostrils
-    addMesh(head, new SphereGeometry(0.02, 8, 6), new MeshStandardMaterial({ color: "#1a3a20" }), [0.28, -0.02, 0.04]);
-    addMesh(head, new SphereGeometry(0.02, 8, 6), new MeshStandardMaterial({ color: "#1a3a20" }), [0.28, -0.02, -0.04]);
+    addMesh(head, new SphereGeometry(0.02, 8, 6), new MeshStandardMaterial({ color: "#3a1010" }), [0.28, -0.02, 0.04]);
+    addMesh(head, new SphereGeometry(0.02, 8, 6), new MeshStandardMaterial({ color: "#3a1010" }), [0.28, -0.02, -0.04]);
 
     // Spikes along spine
     for (let i = 0; i < 5; i += 1) {
