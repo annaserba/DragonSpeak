@@ -286,21 +286,129 @@ function RestaurantThreeScene({ active }: Props) {
       ]);
     });
 
-    const npc = new Group();
-    npc.position.set(1.8, 0.15, -1.32);
-    root.add(npc);
-    addMesh(npc, new SphereGeometry(0.48, 32, 20), porcelainMaterial, [0, 0.68, 0]);
-    addMesh(
-      npc,
-      new SphereGeometry(0.5, 32, 12),
-      darkWoodMaterial,
-      [0, 0.77, -0.05],
-      [1, 0.45, 0.85],
-    );
-    addMesh(npc, new CylinderGeometry(0.34, 0.44, 1.05, 32), redMaterial, [0, -0.06, 0]);
-    addMesh(npc, new ConeGeometry(0.28, 0.22, 32), goldMaterial, [0, 1.25, 0]);
-    addMesh(npc, new SphereGeometry(0.035, 12, 8), darkWoodMaterial, [-0.15, 0.75, 0.43]);
-    addMesh(npc, new SphereGeometry(0.035, 12, 8), darkWoodMaterial, [0.15, 0.75, 0.43]);
+    const dragon = new Group();
+    dragon.position.set(1.8, 0.55, -1.32);
+    root.add(dragon);
+
+    const dragonBody = new MeshStandardMaterial({
+      color: "#3a8c5c",
+      emissive: "#0f2f1a",
+      emissiveIntensity: 0.15,
+      roughness: 0.45,
+    });
+    const dragonBelly = new MeshStandardMaterial({
+      color: "#a8d8a0",
+      roughness: 0.5,
+    });
+    const dragonEye = new MeshStandardMaterial({
+      color: "#f4c259",
+      emissive: "#ff8c00",
+      emissiveIntensity: 0.6,
+      roughness: 0.15,
+    });
+    const dragonHorn = new MeshStandardMaterial({
+      color: "#e8d5a0",
+      roughness: 0.3,
+    });
+    const dragonSpike = new MeshStandardMaterial({
+      color: "#2a6640",
+      roughness: 0.35,
+    });
+    const dragonWing = new MeshStandardMaterial({
+      color: "#3a7a50",
+      emissive: "#0f2f1a",
+      emissiveIntensity: 0.08,
+      roughness: 0.4,
+      side: DoubleSide,
+    });
+
+    // Body segments
+    const bodySegments: Mesh[] = [];
+    addMesh(dragon, new SphereGeometry(0.22, 24, 16), dragonBody, [0, 0.05, 0]);
+    addMesh(dragon, new SphereGeometry(0.24, 24, 16), dragonBody, [0.2, 0.02, 0], [1, 0.9, 0.85]);
+    addMesh(dragon, new SphereGeometry(0.26, 24, 16), dragonBody, [0.42, -0.04, 0], [1, 0.85, 0.8]);
+    addMesh(dragon, new SphereGeometry(0.24, 24, 16), dragonBody, [0.6, -0.1, 0], [1, 0.8, 0.75]);
+    addMesh(dragon, new SphereGeometry(0.18, 20, 14), dragonBody, [0.74, -0.15, 0], [1, 0.7, 0.65]);
+
+    // Belly
+    addMesh(dragon, new SphereGeometry(0.16, 16, 12), dragonBelly, [0.22, -0.12, 0.16], [0.9, 0.6, 0.5]);
+    addMesh(dragon, new SphereGeometry(0.17, 16, 12), dragonBelly, [0.42, -0.16, 0.15], [0.85, 0.55, 0.45]);
+
+    // Head
+    const head = new Group();
+    head.position.set(-0.18, 0.22, 0);
+    dragon.add(head);
+    addMesh(head, new SphereGeometry(0.18, 24, 18), dragonBody, [0, 0, 0], [1.1, 0.9, 0.9]);
+    addMesh(head, new SphereGeometry(0.14, 20, 14), dragonBody, [0.16, -0.04, 0], [0.9, 0.75, 0.6]);
+
+    // Eyes
+    const eyeL = new Group();
+    eyeL.position.set(0.08, 0.06, 0.13);
+    head.add(eyeL);
+    addMesh(eyeL, new SphereGeometry(0.045, 12, 8), dragonEye, [0, 0, 0]);
+    addMesh(eyeL, new SphereGeometry(0.015, 8, 6), new MeshStandardMaterial({ color: "#000" }), [0.01, 0.005, 0.03]);
+
+    const eyeR = new Group();
+    eyeR.position.set(0.08, 0.06, -0.13);
+    head.add(eyeR);
+    addMesh(eyeR, new SphereGeometry(0.045, 12, 8), dragonEye, [0, 0, 0]);
+    addMesh(eyeR, new SphereGeometry(0.015, 8, 6), new MeshStandardMaterial({ color: "#000" }), [0.01, 0.005, -0.03]);
+
+    // Horns
+    addMesh(head, new ConeGeometry(0.04, 0.14, 12, 8), dragonHorn, [0.04, 0.12, 0.08]);
+    addMesh(head, new ConeGeometry(0.04, 0.14, 12, 8), dragonHorn, [0.04, 0.12, -0.08]);
+
+    // Nostrils
+    addMesh(head, new SphereGeometry(0.02, 8, 6), new MeshStandardMaterial({ color: "#1a3a20" }), [0.28, -0.02, 0.04]);
+    addMesh(head, new SphereGeometry(0.02, 8, 6), new MeshStandardMaterial({ color: "#1a3a20" }), [0.28, -0.02, -0.04]);
+
+    // Spikes along spine
+    for (let i = 0; i < 5; i += 1) {
+      const t = i / 4;
+      const x = 0.05 + t * 0.7;
+      const y = 0.15 - t * 0.02;
+      addMesh(dragon, new ConeGeometry(0.03, 0.08, 8, 6), dragonSpike, [x, y + 0.08, 0], [1, 1, 1]);
+    }
+
+    // Tail
+    const tail = new Group();
+    tail.position.set(0.78, -0.16, 0);
+    dragon.add(tail);
+    for (let i = 0; i < 4; i += 1) {
+      const s = 1 - i * 0.22;
+      addMesh(tail, new SphereGeometry(0.12 * s, 14, 10), dragonBody, [i * 0.13, 0, 0], [s, s * 0.7, s * 0.6]);
+    }
+    addMesh(tail, new ConeGeometry(0.06, 0.16, 10, 8), dragonSpike, [0.5, 0, 0], [1, 1, 1]);
+
+    // Legs
+    const legPositions: [number, number, number][] = [
+      [0.05, -0.18, 0.14],
+      [0.25, -0.2, 0.16],
+      [0.05, -0.18, -0.14],
+      [0.25, -0.2, -0.16],
+    ];
+    legPositions.forEach(([lx, ly, lz]) => {
+      const leg = new Group();
+      leg.position.set(lx, ly, lz);
+      dragon.add(leg);
+      addMesh(leg, new CylinderGeometry(0.04, 0.05, 0.12, 10), dragonBody, [0, -0.06, 0]);
+      addMesh(leg, new SphereGeometry(0.05, 10, 8), dragonBody, [0, -0.14, 0], [1, 0.3, 1.2]);
+    });
+
+    // Wings
+    const wingL = new Group();
+    wingL.position.set(0.15, 0.12, 0.18);
+    dragon.add(wingL);
+    wingL.rotation.z = 0.3;
+    wingL.rotation.x = -0.5;
+    addMesh(wingL, new ConeGeometry(0.25, 0.08, 8, 4), dragonWing, [0.08, 0.02, 0], [1, 1, 1.2]);
+
+    const wingR = new Group();
+    wingR.position.set(0.15, 0.12, -0.18);
+    dragon.add(wingR);
+    wingR.rotation.z = 0.3;
+    wingR.rotation.x = 0.5;
+    addMesh(wingR, new ConeGeometry(0.25, 0.08, 8, 4), dragonWing, [0.08, 0.02, 0], [1, 1, 1.2]);
 
     const sideTable = addRoundTable(root, woodMaterial, goldMaterial, [-2.15, -0.45, 0.55]);
     sideTable.rotation.y = -0.35;
@@ -375,7 +483,7 @@ function RestaurantThreeScene({ active }: Props) {
       const pointer = pointerRef.current;
       root.rotation.y = pointer.x * 0.16 + Math.sin(elapsed * 0.35) * 0.035;
       root.rotation.x = -pointer.y * 0.04;
-      npc.position.y = Math.sin(elapsed * 1.6) * 0.035;
+      dragon.position.y = 0.55 + Math.sin(elapsed * 1.6) * 0.035;
       cup.rotation.y = elapsed * 0.55;
       steam.forEach((particle, index) => {
         const drift = elapsed * 0.42 + index * 0.7;
@@ -383,6 +491,8 @@ function RestaurantThreeScene({ active }: Props) {
         particle.position.x = -1.2 + Math.sin(drift * 2.2) * 0.06;
         particle.scale.setScalar(0.75 + (drift % 0.6));
       });
+      wingL.rotation.z = 0.3 + Math.sin(elapsed * 2.4) * 0.15;
+      wingR.rotation.z = 0.3 + Math.sin(elapsed * 2.4) * 0.15;
       lanterns.forEach((lantern, index) => {
         lantern.rotation.z = Math.sin(elapsed * 1.2 + index) * 0.035;
       });
