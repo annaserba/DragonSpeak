@@ -288,127 +288,213 @@ function RestaurantThreeScene({ active }: Props) {
 
     const dragon = new Group();
     dragon.position.set(1.8, 0.55, -1.32);
+    dragon.scale.setScalar(0.85);
     root.add(dragon);
 
-    const dragonBody = new MeshStandardMaterial({
-      color: "#b33131",
-      emissive: "#4a1010",
-      emissiveIntensity: 0.2,
-      roughness: 0.4,
-    });
-    const dragonBelly = new MeshStandardMaterial({
-      color: "#e8c0a0",
-      roughness: 0.45,
-    });
-    const dragonEye = new MeshStandardMaterial({
-      color: "#f4c259",
-      emissive: "#ff8c00",
-      emissiveIntensity: 0.7,
-      roughness: 0.12,
-    });
-    const dragonHorn = new MeshStandardMaterial({
-      color: "#2a1a10",
-      roughness: 0.25,
-    });
-    const dragonSpike = new MeshStandardMaterial({
-      color: "#6b1a1a",
-      roughness: 0.3,
-    });
-    const dragonWing = new MeshStandardMaterial({
-      color: "#8b2020",
-      emissive: "#3a0a0a",
+    const dRed = new MeshStandardMaterial({
+      color: "#d1433a",
+      emissive: "#3a1010",
       emissiveIntensity: 0.1,
       roughness: 0.35,
+    });
+    const dDark = new MeshStandardMaterial({
+      color: "#9b2d28",
+      roughness: 0.3,
+    });
+    const dBelly = new MeshStandardMaterial({
+      color: "#f5d5b0",
+      roughness: 0.4,
+    });
+    const dEyeWhite = new MeshStandardMaterial({
+      color: "#fafaf5",
+      roughness: 0.1,
+    });
+    const dIris = new MeshStandardMaterial({
+      color: "#f4c259",
+      emissive: "#cc6600",
+      emissiveIntensity: 0.5,
+      roughness: 0.08,
+    });
+    const dPupil = new MeshStandardMaterial({ color: "#111" });
+    const dHorn = new MeshStandardMaterial({
+      color: "#f5e6d3",
+      roughness: 0.2,
+    });
+    const dSpike = new MeshStandardMaterial({
+      color: "#ff6655",
+      roughness: 0.3,
+    });
+    const dWing = new MeshStandardMaterial({
+      color: "#e06055",
+      emissive: "#3a1010",
+      emissiveIntensity: 0.06,
+      roughness: 0.3,
       side: DoubleSide,
+      transparent: true,
+      opacity: 0.85,
+    });
+    const dSmile = new MeshStandardMaterial({
+      color: "#3a1515",
+      roughness: 0.2,
     });
 
-    // Body segments
-    const bodySegments: Mesh[] = [];
-    addMesh(dragon, new SphereGeometry(0.22, 24, 16), dragonBody, [0, 0.05, 0]);
-    addMesh(dragon, new SphereGeometry(0.24, 24, 16), dragonBody, [0.2, 0.02, 0], [1, 0.9, 0.85]);
-    addMesh(dragon, new SphereGeometry(0.26, 24, 16), dragonBody, [0.42, -0.04, 0], [1, 0.85, 0.8]);
-    addMesh(dragon, new SphereGeometry(0.24, 24, 16), dragonBody, [0.6, -0.1, 0], [1, 0.8, 0.75]);
-    addMesh(dragon, new SphereGeometry(0.18, 20, 14), dragonBody, [0.74, -0.15, 0], [1, 0.7, 0.65]);
+    // === BODY — round potato shape ===
+    addMesh(dragon, new SphereGeometry(0.4, 32, 24), dRed, [0.15, -0.05, 0], [1, 0.85, 0.9]);
+    addMesh(dragon, new SphereGeometry(0.35, 28, 20), dBelly, [0.15, -0.18, 0.28], [0.8, 0.55, 0.45]);
 
-    // Belly
-    addMesh(dragon, new SphereGeometry(0.16, 16, 12), dragonBelly, [0.22, -0.12, 0.16], [0.9, 0.6, 0.5]);
-    addMesh(dragon, new SphereGeometry(0.17, 16, 12), dragonBelly, [0.42, -0.16, 0.15], [0.85, 0.55, 0.45]);
-
-    // Head
+    // === HEAD — big and round ===
     const head = new Group();
-    head.position.set(-0.18, 0.22, 0);
+    head.position.set(-0.35, 0.3, 0);
     dragon.add(head);
-    addMesh(head, new SphereGeometry(0.18, 24, 18), dragonBody, [0, 0, 0], [1.1, 0.9, 0.9]);
-    addMesh(head, new SphereGeometry(0.14, 20, 14), dragonBody, [0.16, -0.04, 0], [0.9, 0.75, 0.6]);
+    addMesh(head, new SphereGeometry(0.32, 32, 24), dRed, [0, 0, 0], [1, 0.92, 1]);
 
-    // Eyes
-    const eyeL = new Group();
-    eyeL.position.set(0.08, 0.06, 0.13);
-    head.add(eyeL);
-    addMesh(eyeL, new SphereGeometry(0.045, 12, 8), dragonEye, [0, 0, 0]);
-    addMesh(eyeL, new SphereGeometry(0.015, 8, 6), new MeshStandardMaterial({ color: "#000" }), [0.01, 0.005, 0.03]);
-
-    const eyeR = new Group();
-    eyeR.position.set(0.08, 0.06, -0.13);
-    head.add(eyeR);
-    addMesh(eyeR, new SphereGeometry(0.045, 12, 8), dragonEye, [0, 0, 0]);
-    addMesh(eyeR, new SphereGeometry(0.015, 8, 6), new MeshStandardMaterial({ color: "#000" }), [0.01, 0.005, -0.03]);
-
-    // Horns
-    addMesh(head, new ConeGeometry(0.04, 0.14, 12, 8), dragonHorn, [0.04, 0.12, 0.08]);
-    addMesh(head, new ConeGeometry(0.04, 0.14, 12, 8), dragonHorn, [0.04, 0.12, -0.08]);
+    // Snout
+    addMesh(head, new SphereGeometry(0.19, 24, 16), dRed, [0.25, -0.06, 0], [0.9, 0.65, 0.7]);
+    addMesh(head, new SphereGeometry(0.13, 20, 14), dBelly, [0.32, -0.1, 0], [0.6, 0.4, 0.45]);
 
     // Nostrils
-    addMesh(head, new SphereGeometry(0.02, 8, 6), new MeshStandardMaterial({ color: "#3a1010" }), [0.28, -0.02, 0.04]);
-    addMesh(head, new SphereGeometry(0.02, 8, 6), new MeshStandardMaterial({ color: "#3a1010" }), [0.28, -0.02, -0.04]);
+    addMesh(head, new SphereGeometry(0.025, 8, 6), dDark, [0.42, -0.04, 0.05]);
+    addMesh(head, new SphereGeometry(0.025, 8, 6), dDark, [0.42, -0.04, -0.05]);
 
-    // Spikes along spine
-    for (let i = 0; i < 5; i += 1) {
-      const t = i / 4;
-      const x = 0.05 + t * 0.7;
-      const y = 0.15 - t * 0.02;
-      addMesh(dragon, new ConeGeometry(0.03, 0.08, 8, 6), dragonSpike, [x, y + 0.08, 0], [1, 1, 1]);
-    }
+    // Smile
+    const smile = addMesh(
+      head,
+      new TorusGeometry(0.08, 0.012, 8, 12, Math.PI),
+      dSmile,
+      [0.39, -0.1, 0],
+      [1, 0.8, 1],
+    );
+    smile.rotation.z = 0.15;
 
-    // Tail
-    const tail = new Group();
-    tail.position.set(0.78, -0.16, 0);
-    dragon.add(tail);
+    // === EYES — big anime-style ===
+    const eyeGroupL = new Group();
+    eyeGroupL.position.set(0.06, 0.08, 0.16);
+    head.add(eyeGroupL);
+    addMesh(eyeGroupL, new SphereGeometry(0.08, 20, 14), dEyeWhite, [0, 0, 0]);
+    addMesh(eyeGroupL, new SphereGeometry(0.055, 16, 12), dIris, [0.02, 0, 0.04]);
+    addMesh(eyeGroupL, new SphereGeometry(0.03, 12, 8), dPupil, [0.03, -0.005, 0.06]);
+    // Catchlight
+    addMesh(
+      eyeGroupL,
+      new SphereGeometry(0.015, 8, 6),
+      new MeshStandardMaterial({ color: "#fff", emissive: "#fff", emissiveIntensity: 0.8 }),
+      [0.04, 0.01, 0.07],
+    );
+
+    const eyeGroupR = new Group();
+    eyeGroupR.position.set(0.06, 0.08, -0.16);
+    head.add(eyeGroupR);
+    addMesh(eyeGroupR, new SphereGeometry(0.08, 20, 14), dEyeWhite, [0, 0, 0]);
+    addMesh(eyeGroupR, new SphereGeometry(0.055, 16, 12), dIris, [0.02, 0, -0.04]);
+    addMesh(eyeGroupR, new SphereGeometry(0.03, 12, 8), dPupil, [0.03, -0.005, -0.06]);
+    addMesh(
+      eyeGroupR,
+      new SphereGeometry(0.015, 8, 6),
+      new MeshStandardMaterial({ color: "#fff", emissive: "#fff", emissiveIntensity: 0.8 }),
+      [0.04, 0.01, -0.07],
+    );
+
+    // Eyebrows
+    addMesh(head, new CylinderGeometry(0.01, 0.025, 0.06, 8), dDark, [0.04, 0.16, 0.16], [1, 1, 1]);
+    addMesh(head, new CylinderGeometry(0.01, 0.025, 0.06, 8), dDark, [0.04, 0.16, -0.16], [1, 1, 1]);
+
+    // === HORNS — curved ===
+    const hornL = new Group();
+    hornL.position.set(-0.08, 0.22, 0.12);
+    head.add(hornL);
+    hornL.rotation.z = -0.5;
+    addMesh(hornL, new ConeGeometry(0.05, 0.2, 12, 8), dHorn, [0.06, 0, 0]);
+
+    const hornR = new Group();
+    hornR.position.set(-0.08, 0.22, -0.12);
+    head.add(hornR);
+    hornR.rotation.z = -0.5;
+    addMesh(hornR, new ConeGeometry(0.05, 0.2, 12, 8), dHorn, [0.06, 0, 0]);
+
+    // === SPIKES ===
     for (let i = 0; i < 4; i += 1) {
-      const s = 1 - i * 0.22;
-      addMesh(tail, new SphereGeometry(0.12 * s, 14, 10), dragonBody, [i * 0.13, 0, 0], [s, s * 0.7, s * 0.6]);
+      const t = i / 3;
+      addMesh(
+        dragon,
+        new ConeGeometry(0.04, 0.1, 8, 6),
+        dSpike,
+        [0.0 + t * 0.35, 0.2 - t * 0.02, 0],
+        [1, 1, 1],
+      );
     }
-    addMesh(tail, new ConeGeometry(0.06, 0.16, 10, 8), dragonSpike, [0.5, 0, 0], [1, 1, 1]);
 
-    // Legs
-    const legPositions: [number, number, number][] = [
-      [0.05, -0.18, 0.14],
-      [0.25, -0.2, 0.16],
-      [0.05, -0.18, -0.14],
-      [0.25, -0.2, -0.16],
+    // === TAIL — short and cute ===
+    const tail = new Group();
+    tail.position.set(0.52, -0.15, 0);
+    dragon.add(tail);
+    tail.rotation.z = -0.25;
+    for (let i = 0; i < 3; i += 1) {
+      const s = 1 - i * 0.3;
+      addMesh(tail, new SphereGeometry(0.12 * s, 16, 12), dRed, [i * 0.11, 0, 0], [s, s * 0.7, s * 0.6]);
+    }
+    addMesh(tail, new ConeGeometry(0.04, 0.12, 8, 6), dSpike, [0.3, 0, 0]);
+
+    // === LEGS — stubby ===
+    const legData: [number, number, number, number][] = [
+      [0, -0.3, 0.17, 0],
+      [0.18, -0.3, 0.19, 0],
+      [0, -0.3, -0.17, 0],
+      [0.18, -0.3, -0.19, 0],
     ];
-    legPositions.forEach(([lx, ly, lz]) => {
+    legData.forEach(([lx, ly, lz]) => {
       const leg = new Group();
       leg.position.set(lx, ly, lz);
       dragon.add(leg);
-      addMesh(leg, new CylinderGeometry(0.04, 0.05, 0.12, 10), dragonBody, [0, -0.06, 0]);
-      addMesh(leg, new SphereGeometry(0.05, 10, 8), dragonBody, [0, -0.14, 0], [1, 0.3, 1.2]);
+      addMesh(leg, new CylinderGeometry(0.06, 0.07, 0.14, 12), dRed, [0, -0.06, 0]);
+      addMesh(
+        leg,
+        new SphereGeometry(0.06, 12, 8),
+        dRed,
+        [0, -0.15, 0],
+        [1, 0.25, 1.1],
+      );
     });
 
-    // Wings
+    // === WINGS — small and cute ===
     const wingL = new Group();
-    wingL.position.set(0.15, 0.12, 0.18);
+    wingL.position.set(0, 0.1, 0.22);
     dragon.add(wingL);
-    wingL.rotation.z = 0.3;
-    wingL.rotation.x = -0.5;
-    addMesh(wingL, new ConeGeometry(0.25, 0.08, 8, 4), dragonWing, [0.08, 0.02, 0], [1, 1, 1.2]);
+    wingL.rotation.z = 0.4;
+    wingL.rotation.x = -0.35;
+    addMesh(wingL, new ConeGeometry(0.3, 0.06, 8, 4), dWing, [0.15, 0.03, 0], [1, 1, 1.3]);
 
     const wingR = new Group();
-    wingR.position.set(0.15, 0.12, -0.18);
+    wingR.position.set(0, 0.1, -0.22);
     dragon.add(wingR);
-    wingR.rotation.z = 0.3;
-    wingR.rotation.x = 0.5;
-    addMesh(wingR, new ConeGeometry(0.25, 0.08, 8, 4), dragonWing, [0.08, 0.02, 0], [1, 1, 1.2]);
+    wingR.rotation.z = 0.4;
+    wingR.rotation.x = 0.35;
+    addMesh(wingR, new ConeGeometry(0.3, 0.06, 8, 4), dWing, [0.15, 0.03, 0], [1, 1, 1.3]);
+
+    // === CHEEK SPOTS ===
+    addMesh(
+      head,
+      new SphereGeometry(0.04, 12, 8),
+      new MeshStandardMaterial({
+        color: "#ff8877",
+        emissive: "#ff5544",
+        emissiveIntensity: 0.15,
+        roughness: 0.2,
+      }),
+      [0.38, -0.08, 0.13],
+      [1, 0.6, 0.5],
+    );
+    addMesh(
+      head,
+      new SphereGeometry(0.04, 12, 8),
+      new MeshStandardMaterial({
+        color: "#ff8877",
+        emissive: "#ff5544",
+        emissiveIntensity: 0.15,
+        roughness: 0.2,
+      }),
+      [0.38, -0.08, -0.13],
+      [1, 0.6, 0.5],
+    );
 
     const sideTable = addRoundTable(root, woodMaterial, goldMaterial, [-2.15, -0.45, 0.55]);
     sideTable.rotation.y = -0.35;
