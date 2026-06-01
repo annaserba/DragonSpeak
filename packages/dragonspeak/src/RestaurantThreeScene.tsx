@@ -322,7 +322,7 @@ function RestaurantThreeScene({ active }: Props) {
     ];
 
     const signTexture = createTextTexture("上海小馆");
-    addSprite(root, signTexture, [-1.42, 1.48, -2.16], [2.55, 0.86, 1]);
+    addSprite(root, signTexture, [-0.72, 1.48, -2.16], [2.55, 0.86, 1]);
     const menuTexture = createTextTexture("茶  面  饺子");
     addSprite(root, menuTexture, [2.72, 0.86, -2.08], [1.26, 0.48, 1]);
 
