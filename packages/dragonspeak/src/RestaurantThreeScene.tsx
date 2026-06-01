@@ -4,9 +4,7 @@ import {
   BoxGeometry,
   BufferGeometry,
   CanvasTexture,
-  CatmullRomCurve3,
   Color,
-  ConeGeometry,
   CylinderGeometry,
   DirectionalLight,
   DoubleSide,
@@ -24,10 +22,10 @@ import {
   SpriteMaterial,
   Texture,
   TorusGeometry,
-  TubeGeometry,
-  Vector3,
   WebGLRenderer,
 } from "three";
+
+import { createDragonSeller } from "./DragonSeller";
 
 type Props = {
   active: boolean;
@@ -174,7 +172,7 @@ function RestaurantThreeScene({ active }: Props) {
       0.1,
       100,
     );
-    camera.position.set(0, 2.2, 7.2);
+    camera.position.set(0, 1.9, 5.85);
 
     const renderer = new WebGLRenderer({
       antialias: true,
@@ -289,143 +287,8 @@ function RestaurantThreeScene({ active }: Props) {
       ]);
     });
 
-    const dragon = new Group();
-    dragon.position.set(1.8, 0.55, -1.32);
-    root.add(dragon);
-
-    const cRed = new MeshStandardMaterial({ color: "#c42b2b", roughness: 0.3 });
-    const cGold = new MeshStandardMaterial({
-      color: "#f4c259",
-      emissive: "#8a5a10",
-      emissiveIntensity: 0.25,
-      roughness: 0.2,
-    });
-    const cBelly = new MeshStandardMaterial({ color: "#fae3c8", roughness: 0.35 });
-    const cDark = new MeshStandardMaterial({ color: "#6b1515", roughness: 0.25 });
-    const cEye = new MeshStandardMaterial({
-      color: "#f4c259",
-      emissive: "#ff8c00",
-      emissiveIntensity: 0.7,
-      roughness: 0.1,
-    });
-    const cHorn = new MeshStandardMaterial({ color: "#f5ede0", roughness: 0.15 });
-    const cMane = new MeshStandardMaterial({
-      color: "#e8a020",
-      roughness: 0.3,
-    });
-
-    // === Serpentine body via CatmullRom curve + TubeGeometry ===
-    const curvePoints = [
-      new Vector3(-0.3, 0.4, 0),
-      new Vector3(-0.1, 0.2, 0),
-      new Vector3(0.1, 0.05, 0.15),
-      new Vector3(0.35, -0.1, 0.12),
-      new Vector3(0.55, -0.2, -0.05),
-      new Vector3(0.7, -0.25, -0.15),
-      new Vector3(0.9, -0.2, -0.1),
-      new Vector3(1.05, -0.1, 0.05),
-      new Vector3(1.15, 0.05, 0.1),
-    ];
-    const curve = new CatmullRomCurve3(curvePoints);
-    const tube = new Mesh(new TubeGeometry(curve, 64, 0.08, 16, false), cRed);
-    dragon.add(tube);
-
-    // Belly line (thinner tube offset down)
-    const bellyCurve = new CatmullRomCurve3(
-      curvePoints.map((p) => new Vector3(p.x, p.y - 0.06, p.z)),
-    );
-    const belly = new Mesh(new TubeGeometry(bellyCurve, 48, 0.03, 10, false), cBelly);
-    dragon.add(belly);
-
-    // === Head ===
-    const head = new Group();
-    const headPos = curve.getPoint(0);
-    head.position.copy(headPos);
-    dragon.add(head);
-
-    addMesh(head, new SphereGeometry(0.14, 24, 18), cRed, [0, 0, 0], [1, 0.85, 0.75]);
-    addMesh(head, new SphereGeometry(0.1, 20, 14), cRed, [0.12, -0.02, 0], [0.8, 0.55, 0.5]);
-    addMesh(head, new SphereGeometry(0.06, 14, 10), cBelly, [0.16, -0.04, 0], [0.55, 0.35, 0.35]);
-
-    // Nostrils
-    addMesh(head, new SphereGeometry(0.015, 6, 4), cDark, [0.2, -0.01, 0.025]);
-    addMesh(head, new SphereGeometry(0.015, 6, 4), cDark, [0.2, -0.01, -0.025]);
-
-    // Eyes
-    addMesh(head, new SphereGeometry(0.04, 14, 10), cEye, [0.0, 0.04, 0.07]);
-    addMesh(head, new SphereGeometry(0.04, 14, 10), cEye, [0.0, 0.04, -0.07]);
-    addMesh(head, new SphereGeometry(0.02, 8, 6), new MeshStandardMaterial({ color: "#111" }), [0.015, 0.045, 0.09]);
-    addMesh(head, new SphereGeometry(0.02, 8, 6), new MeshStandardMaterial({ color: "#111" }), [0.015, 0.045, -0.09]);
-
-    // Antlers
-    const antlerL = new Group();
-    antlerL.position.set(-0.02, 0.1, 0.04);
-    head.add(antlerL);
-    for (let i = 0; i < 3; i += 1) {
-      addMesh(antlerL, new CylinderGeometry(0.008, 0.012, 0.08, 8), cHorn, [i * 0.03, i * 0.03, i * 0.03], [1, 1, 1]);
-    }
-
-    const antlerR = new Group();
-    antlerR.position.set(-0.02, 0.1, -0.04);
-    head.add(antlerR);
-    for (let i = 0; i < 3; i += 1) {
-      addMesh(antlerR, new CylinderGeometry(0.008, 0.012, 0.08, 8), cHorn, [i * 0.03, i * 0.03, -i * 0.03], [1, 1, 1]);
-    }
-
-    // Whiskers
-    [0.025, -0.025].forEach((z) => {
-      const whisker = new Group();
-      whisker.position.set(0.18, -0.04, z);
-      head.add(whisker);
-      for (let i = 0; i < 4; i += 1) {
-        addMesh(whisker, new SphereGeometry(0.012, 6, 4), cGold, [i * 0.04, i * 0.015, 0], [1, 1, 1]);
-      }
-    });
-
-    // === Mane/frill along spine ===
-    for (let i = 0; i < 12; i += 1) {
-      const t = i / 11;
-      const pt = curve.getPoint(t);
-      const tangent = curve.getTangent(t).normalize();
-      const up = new Vector3(0, 1, 0);
-      const maneMesh = new Mesh(new ConeGeometry(0.03, 0.1, 6, 4), cMane);
-      maneMesh.position.copy(pt).add(new Vector3(0, 0.08, 0));
-      maneMesh.rotation.z = Math.PI / 2;
-      dragon.add(maneMesh);
-    }
-
-    // === Legs ===
-    [
-      [0.05, -0.12, 0.1],
-      [0.05, -0.12, -0.1],
-      [0.35, -0.2, 0.12],
-      [0.35, -0.2, -0.12],
-    ].forEach(([lx, ly, lz]) => {
-      const leg = new Group();
-      leg.position.set(lx, ly, lz);
-      dragon.add(leg);
-      addMesh(leg, new CylinderGeometry(0.03, 0.04, 0.1, 8), cRed, [0, -0.04, 0]);
-      // Claws
-      addMesh(leg, new ConeGeometry(0.015, 0.04, 4, 3), cGold, [0, -0.1, 0.02]);
-      addMesh(leg, new ConeGeometry(0.015, 0.04, 4, 3), cGold, [0, -0.1, -0.02]);
-    });
-
-    // === Pearl ===
-    const pearl = new Mesh(new SphereGeometry(0.06, 24, 16), new MeshStandardMaterial({
-      color: "#fff8e8",
-      emissive: "#ffe8c0",
-      emissiveIntensity: 0.5,
-      roughness: 0.08,
-    }));
-    const tailEnd = curve.getPoint(1);
-    pearl.position.copy(tailEnd).add(new Vector3(0.08, 0.08, 0.02));
-    dragon.add(pearl);
-
-    // Tail tip curl
-    const tailTip = new Group();
-    tailTip.position.copy(curve.getPoint(0.95));
-    dragon.add(tailTip);
-    addMesh(tailTip, new ConeGeometry(0.04, 0.1, 8, 6), cMane, [0.04, 0, 0], [1, 1, 1]);
+    const dragonSeller = createDragonSeller(addMesh, goldMaterial);
+    root.add(dragonSeller.group);
 
     const sideTable = addRoundTable(root, woodMaterial, goldMaterial, [-2.15, -0.45, 0.55]);
     sideTable.rotation.y = -0.35;
@@ -500,8 +363,18 @@ function RestaurantThreeScene({ active }: Props) {
       const pointer = pointerRef.current;
       root.rotation.y = pointer.x * 0.16 + Math.sin(elapsed * 0.35) * 0.035;
       root.rotation.x = -pointer.y * 0.04;
-      dragon.position.y = 0.55 + Math.sin(elapsed * 1.1) * 0.025;
-      pearl.position.y = pearl.position.y + Math.sin(elapsed * 2.5) * 0.004;
+      dragonSeller.group.position.y = -0.08 + Math.sin(elapsed * 1.1) * 0.014;
+      dragonSeller.head.rotation.y = pointer.x * 0.12 + Math.sin(elapsed * 0.8) * 0.035;
+      dragonSeller.head.rotation.x = -pointer.y * 0.06 + Math.sin(elapsed * 1.1) * 0.018;
+      dragonSeller.whiskers.forEach((whisker, index) => {
+        whisker.rotation.y = Math.sin(elapsed * 1.7 + index) * 0.045;
+      });
+      dragonSeller.maneTufts.forEach((tuft, index) => {
+        tuft.rotation.z += Math.sin(elapsed * 1.4 + index) * 0.0008;
+      });
+      dragonSeller.browTufts.forEach((tuft, index) => {
+        tuft.rotation.y = Math.sin(elapsed * 1.2 + index) * 0.035;
+      });
       cup.rotation.y = elapsed * 0.55;
       steam.forEach((particle, index) => {
         const drift = elapsed * 0.42 + index * 0.7;
@@ -515,8 +388,8 @@ function RestaurantThreeScene({ active }: Props) {
       goldMaterial.emissiveIntensity = active ? 0.38 + Math.sin(elapsed * 3) * 0.08 : 0.2;
       lanternMaterial.emissiveIntensity = 0.36 + Math.sin(elapsed * 2.4) * 0.08;
       tableGlow.intensity = 0.9 + Math.sin(elapsed * 1.7) * 0.18;
-      camera.position.x += (pointer.x * 0.35 - camera.position.x) * 0.04;
-      camera.lookAt(0, 0.15, -1.2);
+      camera.position.x += (pointer.x * 0.28 - camera.position.x) * 0.04;
+      camera.lookAt(0.12, 0.34, -1.38);
       renderer.render(scene, camera);
       frameId = window.requestAnimationFrame(animate);
     };
